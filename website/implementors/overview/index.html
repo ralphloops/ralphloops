@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implementor Overview — Ralph Loops</title>
+  <meta name="description" content="How runtimes should discover, parse, and execute Ralph Loops.">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔁</text></svg>">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="/"><span class="brand-mark">🔁</span><span class="brand-name">Ralph Loops</span><span class="brand-tag">proposed format</span></a>
+    <nav class="nav-links">
+      <a href="/specification/">Specification</a>
+      <a href="/loop-creation/quickstart/">Quickstart</a>
+      <a href="/implementors/overview/">Implementors</a>
+      <a href="/examples/">Examples</a>
+      <a href="/governance/">Governance</a>
+      <a class="nav-github" href="https://github.com/ralphloops/ralphloops">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="doc">
+  <p class="eyebrow">For implementors</p>
+  <h1>Implementor Overview</h1>
+  <p class="sub muted">
+    How a compatible runtime discovers, parses, and executes Ralph Loops.
+    This page is a narrative overview — the normative rules live in the
+    <a href="/specification/">specification</a> and the
+    <a href="/implementors/reference/">implementor reference</a>.
+  </p>
+
+  <h2>Discovery</h2>
+  <p>A runtime SHOULD look for <code>RALPH.md</code> files in:</p>
+  <ul>
+    <li>directories passed directly on the command line</li>
+    <li>a configurable local loops directory</li>
+    <li>project-local loop packages checked into git</li>
+    <li>installed shared loop packages (global)</li>
+    <li>registry-downloaded packages, when a registry exists</li>
+  </ul>
+
+  <h2>Parsing</h2>
+  <ol>
+    <li>Read <code>RALPH.md</code> as UTF-8.</li>
+    <li>If the file starts with a <code>---</code> line, parse the YAML frontmatter block.</li>
+    <li>Treat the remainder as the agent-facing markdown body.</li>
+    <li>Validate required metadata (<code>name</code>, <code>description</code>, <code>ralphloops_version</code>) if frontmatter is present.</li>
+  </ol>
+
+  <h2>Resource resolution</h2>
+  <p>All relative paths resolve against the package root (the directory containing <code>RALPH.md</code>). Runtimes MUST reject any path that escapes the package root — this includes <code>..</code> traversal and symlink escape.</p>
+
+  <h2>Execution</h2>
+  <p>The format does not mandate a specific execution engine. A runtime is responsible for:</p>
+  <ul>
+    <li>making the loop body and bundled resources available to the agent</li>
+    <li>wiring declared <code>entry</code> commands to the runtime&rsquo;s command execution mechanism</li>
+    <li>deciding how iteration, context reset, and validation are performed</li>
+  </ul>
+  <p>A runtime SHOULD document its execution contract so loop authors can rely on consistent behavior.</p>
+
+  <h2>Compatibility classes</h2>
+  <p>Runtimes self-declare their compatibility level:</p>
+  <ul>
+    <li><strong>Reader</strong> — can discover and parse loop packages</li>
+    <li><strong>Executor</strong> — can execute loop instructions and load bundled files</li>
+    <li><strong>Publisher</strong> — can validate and publish loops for reuse</li>
+  </ul>
+
+  <h2>Errors vs warnings</h2>
+  <table>
+    <thead><tr><th>Condition</th><th>Severity</th></tr></thead>
+    <tbody>
+      <tr><td>Missing <code>RALPH.md</code></td><td>Fatal</td></tr>
+      <tr><td>Invalid UTF-8 in <code>RALPH.md</code></td><td>Fatal</td></tr>
+      <tr><td>Unparseable YAML frontmatter</td><td>Fatal</td></tr>
+      <tr><td>Missing declared <code>entry</code> file</td><td>Fatal</td></tr>
+      <tr><td>Path traversal outside package root</td><td>Fatal</td></tr>
+      <tr><td>Missing recommended metadata</td><td>Warning</td></tr>
+      <tr><td>Unknown metadata fields</td><td>Warning</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+  <p class="muted small">Next: <a href="/implementors/reference/">implementor reference</a>.</p>
+</main>
+
+</body>
+</html>

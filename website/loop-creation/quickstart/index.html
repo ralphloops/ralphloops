@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quickstart — Ralph Loops</title>
+  <meta name="description" content="Author your first Ralph Loop package in a few minutes.">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔁</text></svg>">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="/"><span class="brand-mark">🔁</span><span class="brand-name">Ralph Loops</span><span class="brand-tag">proposed format</span></a>
+    <nav class="nav-links">
+      <a href="/specification/">Specification</a>
+      <a href="/loop-creation/quickstart/">Quickstart</a>
+      <a href="/implementors/overview/">Implementors</a>
+      <a href="/examples/">Examples</a>
+      <a href="/governance/">Governance</a>
+      <a class="nav-github" href="https://github.com/ralphloops/ralphloops">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="doc">
+  <p class="eyebrow">For creators</p>
+  <h1>Quickstart</h1>
+  <p class="sub muted">
+    Create your first Ralph Loop package in a few minutes. You will end up
+    with a directory that any compatible runtime can discover and execute.
+  </p>
+
+  <h2>1. Create a loop directory</h2>
+  <pre><code>mkdir fix-failing-tests
+cd fix-failing-tests</code></pre>
+  <p>The directory name is the loop&rsquo;s package name. Choose an outcome-oriented name.</p>
+
+  <h2>2. Add a RALPH.md file</h2>
+  <p>Create <code>RALPH.md</code> with frontmatter and a loop body:</p>
+  <pre><code>---
+name: fix-failing-tests
+description: Find and fix failing tests one failure at a time.
+ralphloops_version: 0.1
+version: 0.1.0
+entry:
+  validate: scripts/validate.sh
+  test: scripts/run-tests.sh
+---
+
+# Goal
+Fix failing tests one failure at a time.
+
+# Loop
+1. Run the validation commands.
+2. Identify the highest-signal failure.
+3. Make the smallest useful change.
+4. Re-run validation.
+5. Commit only if checks pass.
+
+# Exit conditions
+- All tests pass.
+- No remaining failures reported by `scripts/run-tests.sh`.</code></pre>
+
+  <h2>3. Add supporting files</h2>
+  <p>Bundle any scripts, docs, or fixtures the loop needs beside <code>RALPH.md</code>:</p>
+  <pre><code>fix-failing-tests/
+├── RALPH.md
+├── scripts/
+│   ├── run-tests.sh
+│   └── validate.sh
+└── docs/
+    └── repo-conventions.md</code></pre>
+
+  <h2>4. Run it with a compatible runtime</h2>
+  <p>Any runtime that supports the Ralph Loops format can discover and execute the package. For example, with <a href="https://ralphify.co/">Ralphify</a>:</p>
+  <pre><code>ralph run fix-failing-tests/</code></pre>
+
+  <h2>5. Share it</h2>
+  <p>Because a Ralph Loop is just a directory, you can share it by committing it to a git repository, zipping it up, or publishing it to a registry when one exists.</p>
+
+  <hr>
+  <p class="muted small">Next: read the <a href="/loop-creation/best-practices/">best practices guide</a> or browse <a href="/examples/">example loops</a>.</p>
+</main>
+
+</body>
+</html>

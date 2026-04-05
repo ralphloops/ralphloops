@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Specification — Ralph Loops</title>
+  <meta name="description" content="The Ralph Loops specification (v0.1 draft): a directory-based, portable format for Ralph-style agent loops.">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔁</text></svg>">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="/"><span class="brand-mark">🔁</span><span class="brand-name">Ralph Loops</span><span class="brand-tag">proposed format</span></a>
+    <nav class="nav-links">
+      <a href="/specification/">Specification</a>
+      <a href="/loop-creation/quickstart/">Quickstart</a>
+      <a href="/implementors/overview/">Implementors</a>
+      <a href="/examples/">Examples</a>
+      <a href="/governance/">Governance</a>
+      <a class="nav-github" href="https://github.com/ralphloops/ralphloops">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="doc">
+  <p class="eyebrow">v0.1 draft</p>
+  <h1>Ralph Loops Specification</h1>
+
+  <p class="sub muted">
+    This document defines the Ralph Loops format: a directory-based, portable
+    package format for Ralph-style autonomous agent loops. It is an
+    <strong>open proposed format</strong>, not a standard. Breaking changes go
+    through an RFC process in the
+    <a href="https://github.com/ralphloops/ralphloops">canonical repository</a>.
+  </p>
+
+  <h2 id="definition">1. Definition</h2>
+  <p>A <strong>Ralph Loop</strong> is a directory-based package with:</p>
+  <ul>
+    <li>one required file: <code>RALPH.md</code></li>
+    <li>zero or more optional bundled files and subdirectories</li>
+  </ul>
+  <p>
+    A loop package may contain scripts, templates, fixtures, reference
+    materials, sample inputs, plans, checklists, or any other files that help
+    a compatible runtime execute the loop.
+  </p>
+
+  <h2 id="entrypoint">2. Required entrypoint</h2>
+  <p>Each Ralph Loop package <strong>MUST</strong> contain a file named:</p>
+  <pre><code>RALPH.md</code></pre>
+  <p>This file is the canonical entrypoint for the package.</p>
+
+  <h2 id="package-root">3. Package root</h2>
+  <p>
+    The package root is the directory containing <code>RALPH.md</code>. All
+    relative paths in the format are resolved relative to the package root
+    unless otherwise specified.
+  </p>
+
+  <h2 id="layout">4. Allowed structure</h2>
+  <p>There are no required subdirectories beyond <code>RALPH.md</code>. Example:</p>
+  <pre><code>fix-failing-tests/
+├── RALPH.md
+├── scripts/
+│   ├── run-tests.sh
+│   └── validate.sh
+├── prompts/
+│   └── edge-cases.md
+├── templates/
+│   └── issue-comment.md
+└── docs/
+    └── repo-conventions.md</code></pre>
+
+  <h2 id="ralph-md">5. RALPH.md file structure</h2>
+  <p><code>RALPH.md</code> consists of:</p>
+  <ol>
+    <li>optional YAML frontmatter</li>
+    <li>markdown body content</li>
+  </ol>
+  <pre><code>---
+name: fix-failing-tests
+description: Find and fix failing tests one failure at a time.
+version: 0.1
+ralphloops_version: 0.1
+license: MIT
+compatible_runtimes:
+  - ralphify &gt;=0.3.0
+triggers:
+  - failing tests
+  - test suite is red
+entry:
+  validate: scripts/validate.sh
+  test: scripts/run-tests.sh
+resources:
+  - docs/repo-conventions.md
+---
+
+# Goal
+Fix failing tests one failure at a time.
+
+# Loop
+1. Run the validation commands.
+2. Identify the next highest-signal failure.
+3. Make the smallest useful change.
+4. Re-run validation.
+5. Commit only if checks pass.</code></pre>
+
+  <h2 id="metadata">6. Metadata fields</h2>
+
+  <h3>Required (if frontmatter is present)</h3>
+  <ul>
+    <li><code>name</code></li>
+    <li><code>description</code></li>
+    <li><code>ralphloops_version</code></li>
+  </ul>
+  <p>
+    If frontmatter is omitted entirely, runtimes MAY still load the loop,
+    but the package is considered minimally described. Frontmatter is
+    strongly recommended for ecosystem compatibility.
+  </p>
+
+  <h3>Recommended</h3>
+  <table>
+    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>version</code></td><td>Package version.</td></tr>
+      <tr><td><code>license</code></td><td>SPDX license identifier.</td></tr>
+      <tr><td><code>author</code></td><td>Author name or handle.</td></tr>
+      <tr><td><code>homepage</code></td><td>Project homepage URL.</td></tr>
+      <tr><td><code>repository</code></td><td>Source repository URL.</td></tr>
+      <tr><td><code>tags</code></td><td>Free-form tags for discovery.</td></tr>
+      <tr><td><code>compatible_runtimes</code></td><td>Runtimes/version ranges known to support the package.</td></tr>
+      <tr><td><code>triggers</code></td><td>Human-readable phrases describing when to select this loop.</td></tr>
+      <tr><td><code>entry</code></td><td>Map of named entrypoints (typically relative paths). Suggested keys: <code>validate</code>, <code>test</code>, <code>lint</code>, <code>plan</code>, <code>bootstrap</code>.</td></tr>
+      <tr><td><code>resources</code></td><td>List of supporting files that are particularly important for the loop.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="body">7. Markdown body semantics</h2>
+  <p>
+    The format deliberately avoids over-structuring the markdown body.
+    Compatible runtimes MUST treat the body as agent-facing instructions,
+    not as a strict AST.
+  </p>
+  <p>Recommended sections: <code>Goal</code>, <code>Context</code>, <code>Loop</code>, <code>Constraints</code>, <code>Validation</code>, <code>Exit Conditions</code>, <code>Recovery / Failure Handling</code>, <code>Notes for the Agent</code>.</p>
+
+  <h2 id="bundled">8. Optional bundled files</h2>
+  <p>
+    A package may include scripts, prompts, templates, examples, fixtures,
+    plans, checklists, JSON/YAML config, reference docs, or generated
+    examples. Compatible runtimes MUST allow the agent to reference these
+    files relative to the loop package root.
+  </p>
+
+  <h2 id="paths">9. Path resolution rules</h2>
+  <p>All paths in metadata are relative to the package root unless they are absolute URIs. Runtimes MUST:</p>
+  <ul>
+    <li>normalize relative paths safely</li>
+    <li>reject path traversal that escapes the package root</li>
+    <li>treat missing referenced files as package errors or warnings</li>
+  </ul>
+
+  <h2 id="discovery">10. Discovery model</h2>
+  <p>A compatible runtime SHOULD be able to discover Ralph Loops by scanning directories for <code>RALPH.md</code>. Discovery options may include local loop directories, project-local loop packages, installed shared loop packages, and registry-downloaded packages.</p>
+
+  <h2 id="execution">11. Execution contract</h2>
+  <p>The format does not mandate one universal runtime execution engine. However, a compatible runtime SHOULD, at minimum:</p>
+  <ol>
+    <li>locate <code>RALPH.md</code></li>
+    <li>parse metadata if present</li>
+    <li>load the markdown body</li>
+    <li>make bundled resources available</li>
+    <li>resolve referenced relative files safely</li>
+    <li>expose runtime-specific execution behavior consistently</li>
+  </ol>
+
+  <h2 id="compat">12. Compatibility classes</h2>
+  <table>
+    <thead><tr><th>Level</th><th>Name</th><th>Capability</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Reader</td><td>Can discover and parse a Ralph Loop package.</td></tr>
+      <tr><td>2</td><td>Executor</td><td>Can execute loop instructions and load bundled files.</td></tr>
+      <tr><td>3</td><td>Publisher</td><td>Can package, validate, and publish Ralph Loops for reuse.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="validation">13. Validation rules</h2>
+  <p>A valid v0.1 package MUST:</p>
+  <ul>
+    <li>contain <code>RALPH.md</code></li>
+    <li>use valid UTF-8 text for <code>RALPH.md</code></li>
+    <li>contain parseable YAML if frontmatter is present</li>
+    <li>not reference missing required entry files if declared in metadata</li>
+    <li>not contain path traversal references in metadata</li>
+  </ul>
+
+  <h2 id="packaging">14. Packaging and distribution</h2>
+  <p>
+    A Ralph Loop package may be distributed as a git repository subdirectory,
+    a standalone repository, a tarball or zip archive, or a registry package.
+    The directory itself is the unit of portability.
+  </p>
+
+  <h2 id="versioning">15. Versioning</h2>
+  <p><code>ralphloops_version</code> controls spec compatibility.</p>
+  <ul>
+    <li><code>0.x</code> — draft / experimental</li>
+    <li><code>1.x</code> — stable compatibility line</li>
+  </ul>
+  <p>Breaking changes require an RFC and explicit compatibility notes.</p>
+
+  <hr>
+  <p class="muted small">
+    The canonical specification lives in
+    <a href="https://github.com/ralphloops/ralphloops/tree/main/specification">ralphloops/ralphloops/specification</a>.
+    This page tracks the current published draft.
+  </p>
+</main>
+
+</body>
+</html>
