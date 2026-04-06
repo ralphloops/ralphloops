@@ -1,15 +1,15 @@
 /* Ralph Loops — minimal technical site */
 
 :root {
-  --bg: #0b1020;
-  --bg-alt: #0f172a;
-  --surface: #111a33;
-  --border: #1f2a48;
-  --text: #e6ecff;
-  --muted: #9aa7c7;
-  --accent: #7c9cff;
-  --accent-2: #5eead4;
-  --code-bg: #0a1128;
+  --bg: #ffffff;
+  --bg-alt: #f5f5f5;
+  --surface: #f0f0f0;
+  --border: #d0d0d0;
+  --text: #111111;
+  --muted: #555555;
+  --accent: #2a5cdb;
+  --accent-2: #0e8a72;
+  --code-bg: #f4f4f4;
   --max: 1080px;
 }
 
@@ -40,7 +40,7 @@ code {
   background: var(--code-bg);
   padding: 2px 6px;
   border-radius: 4px;
-  color: #c7d2ff;
+  color: #222222;
 }
 
 pre {
@@ -49,7 +49,7 @@ pre {
   border-radius: 8px;
   padding: 16px 20px;
   overflow-x: auto;
-  color: #dbe4ff;
+  color: #333333;
 }
 
 pre code { background: none; padding: 0; color: inherit; }
@@ -162,10 +162,10 @@ p { margin: 0 0 16px; }
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #0b1020;
+  color: #ffffff;
   font-weight: 600;
 }
-.btn-primary:hover { background: #94b0ff; border-color: #94b0ff; }
+.btn-primary:hover { background: #1a4bc4; border-color: #1a4bc4; }
 .btn-ghost { background: transparent; }
 
 .hero-code {
@@ -225,7 +225,7 @@ p { margin: 0 0 16px; }
   height: 36px;
   border-radius: 50%;
   background: var(--accent);
-  color: #0b1020;
+  color: #ffffff;
   font-weight: 700;
   display: grid;
   place-items: center;
