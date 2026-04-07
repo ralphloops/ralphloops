@@ -101,20 +101,35 @@
 agent: claude -p
 commands:
   - name: tests
-    run: scripts/run-tests.sh
+    run: uv run pytest -x
+  - name: types
+    run: uv run ty check
   - name: lint
-    run: scripts/lint.sh
+    run: uv run ruff check .
 args:
   - focus
 ---
 
-# Fix Failing Tests
+# Bug Hunter
 
-Fix failing tests with focus on {{ args.focus }}.
+Find and fix a real bug in this codebase.
+{{ args.focus }}
 
+## Test results
 {{ commands.tests }}
 
-{{ commands.lint }}</code></pre>
+## Type checking
+{{ commands.types }}
+
+## Lint
+{{ commands.lint }}
+
+Each iteration:
+1. Read code — look for edge cases,
+   missing validation, or logic errors.
+2. Write a failing test to prove the bug.
+3. Fix the bug with a minimal change.
+4. Verify all existing tests still pass.</code></pre>
       </div>
     </div>
   </div>
