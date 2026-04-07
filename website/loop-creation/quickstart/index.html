@@ -40,28 +40,31 @@ cd fix-failing-tests</code></pre>
   <h2>2. Add a RALPH.md file</h2>
   <p>Create <code>RALPH.md</code> with frontmatter and a loop body:</p>
   <pre><code>---
-name: fix-failing-tests
-description: Find and fix failing tests one failure at a time.
-ralphloops_version: 0.1
-version: 0.1.0
-entry:
-  validate: scripts/validate.sh
-  test: scripts/run-tests.sh
+agent: claude -p
+commands:
+  - name: tests
+    run: scripts/run-tests.sh
+  - name: validate
+    run: scripts/validate.sh
+args:
+  - focus
 ---
 
-# Goal
-Fix failing tests one failure at a time.
+# Fix Failing Tests
 
-# Loop
-1. Run the validation commands.
-2. Identify the highest-signal failure.
+Fix failing tests with focus on {{ args.focus }}.
+
+{{ commands.validate }}
+
+{{ commands.tests }}
+
+## Instructions
+
+1. Review the test output above.
+2. Pick the highest-signal failing test.
 3. Make the smallest useful change.
 4. Re-run validation.
-5. Commit only if checks pass.
-
-# Exit conditions
-- All tests pass.
-- No remaining failures reported by `scripts/run-tests.sh`.</code></pre>
+5. Commit only if checks pass.</code></pre>
 
   <h2>3. Add supporting files</h2>
   <p>Bundle any scripts, docs, or fixtures the loop needs beside <code>RALPH.md</code>:</p>

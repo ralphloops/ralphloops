@@ -59,31 +59,28 @@ Example:
 
 ```markdown
 ---
-name: fix-failing-tests
-description: Find and fix failing tests one failure at a time.
-version: 0.1
-ralphloops_version: 0.1
-license: MIT
-compatible_runtimes:
-  - ralphify >=0.3.0
-triggers:
-  - failing tests
-  - test suite is red
-entry:
-  validate: scripts/validate.sh
-  test: scripts/run-tests.sh
-resources:
-  - docs/repo-conventions.md
+agent: claude -p
+commands:
+  - name: tests
+    run: scripts/run-tests.sh
+  - name: validate
+    run: scripts/validate.sh
+args:
+  - module
 ---
 
-# Goal
+# Fix Failing Tests
 
-Fix failing tests one failure at a time.
+Fix failing tests in {{ args.module }} one failure at a time.
 
-# Loop
+{{ commands.validate }}
 
-1. Run the validation commands.
-2. Identify the next highest-signal failure.
+{{ commands.tests }}
+
+## Instructions
+
+1. Review the test output above.
+2. Pick the highest-signal failing test.
 3. Make the smallest useful change.
 4. Re-run validation.
 5. Commit only if checks pass.
@@ -159,11 +156,3 @@ A Ralph Loop package MAY be distributed as:
 
 The directory itself is the unit of portability.
 
-## 11. Versioning
-
-`ralphloops_version` controls spec compatibility.
-
-- `0.x` — draft / experimental
-- `1.x` — stable compatibility line
-
-See [`VERSIONING.md`](../VERSIONING.md) for the full policy.

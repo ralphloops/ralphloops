@@ -2,72 +2,42 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ralphloops.io/schemas/metadata.schema.json",
   "title": "Ralph Loops frontmatter metadata",
-  "description": "JSON Schema for the YAML frontmatter block of a RALPH.md file (ralphloops_version 0.1).",
+  "description": "JSON Schema for the YAML frontmatter block of a RALPH.md file.",
   "type": "object",
-  "required": ["name", "description", "ralphloops_version"],
   "additionalProperties": true,
   "properties": {
-    "name": {
+    "agent": {
       "type": "string",
       "minLength": 1,
-      "description": "Short stable package name."
+      "description": "The command to run (anything that reads stdin)."
     },
-    "description": {
-      "type": "string",
-      "minLength": 1,
-      "description": "One-sentence summary for discovery."
-    },
-    "ralphloops_version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$",
-      "description": "Format version used by the package."
-    },
-    "version": {
-      "type": "string",
-      "description": "Package version (semver recommended)."
-    },
-    "license": {
-      "type": "string",
-      "description": "SPDX license identifier."
-    },
-    "author": {
-      "oneOf": [
-        {"type": "string"},
-        {
-          "type": "object",
-          "properties": {
-            "name": {"type": "string"},
-            "email": {"type": "string", "format": "email"},
-            "url": {"type": "string", "format": "uri"}
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "run"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name used in {{ commands.<name> }} template placeholders."
           },
-          "additionalProperties": true
-        }
-      ]
+          "run": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Shell command to execute."
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Deterministic feedback commands."
     },
-    "homepage": {"type": "string", "format": "uri"},
-    "repository": {"type": "string"},
-    "tags": {
+    "args": {
       "type": "array",
-      "items": {"type": "string"}
-    },
-    "compatible_runtimes": {
-      "type": "array",
-      "items": {"type": "string"},
-      "description": "Runtimes or version ranges known to support this package."
-    },
-    "triggers": {
-      "type": "array",
-      "items": {"type": "string"}
-    },
-    "entry": {
-      "type": "object",
-      "description": "Map of named entrypoints (relative paths to files inside the package).",
-      "additionalProperties": {"type": "string"}
-    },
-    "resources": {
-      "type": "array",
-      "items": {"type": "string"},
-      "description": "Supporting files that are particularly important for this loop."
+      "items": {
+        "type": "string"
+      },
+      "description": "CLI arguments that become --<name> flags and {{ args.<name> }} template variables."
     }
   }
 }

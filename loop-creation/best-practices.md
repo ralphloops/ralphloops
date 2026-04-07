@@ -29,7 +29,7 @@ reference them.
 
 If the loop needs to run tests, lint, or validate something, put the
 commands in a script under `scripts/` and reference it from the
-`entry` map. This makes the loop portable across projects that wire
+`commands` list. This makes the loop portable across projects that wire
 their commands differently.
 
 ## Prefer relative paths
@@ -41,7 +41,7 @@ absolute paths. Never reference files outside the loop directory.
 
 An autonomous loop must know when to stop. Always include:
 
-- a `validate` or `test` entry that can verify progress
+- a `validate` or `test` command that can verify progress
 - explicit exit conditions in the body
 
 Without these, the runtime cannot decide when the loop is done and may
@@ -53,19 +53,6 @@ Outcome-oriented names (`fix-failing-tests`) travel across projects
 better than tool-oriented names (`my-ralphify-loop`). Assume someone
 will find your loop in a list and need to understand what it does in
 under three seconds.
-
-## Declare runtime compatibility
-
-Use `compatible_runtimes` to declare which runtimes and versions you
-have tested the loop against:
-
-```yaml
-compatible_runtimes:
-  - ralphify >=0.3.0
-```
-
-This is a hint, not a hard constraint. Be honest about what you've
-actually tested.
 
 ## Ship a realistic example
 

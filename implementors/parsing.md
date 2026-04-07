@@ -34,20 +34,20 @@ Frontmatter is a YAML block at the very top of the file, delimited by
 - The top-level frontmatter document MUST be a mapping. Lists or
   scalars at the top level are a fatal error.
 
-## Required fields
+## Recognised fields
 
-If frontmatter is present, these fields are required:
+If frontmatter is present, these fields are recognised:
 
-- `name` (string)
-- `description` (string)
-- `ralphloops_version` (string)
+- `agent` (string) -- the command to run
+- `commands` (list of objects) -- deterministic feedback commands
+- `args` (list of strings) -- CLI arguments
 
-Missing any of these is a fatal error.
+All fields are optional since frontmatter itself is optional.
 
 ## Path fields
 
-Path-valued fields include everything under `entry` and everything in
-`resources`. For each path:
+Path-valued fields include the `run` values in `commands`. For each
+path:
 
 - Normalize it against the package root.
 - Reject paths containing `..` that escape the package root.
@@ -55,20 +55,13 @@ Path-valued fields include everything under `entry` and everything in
   `\\?\...`).
 - Treat forward slashes as path separators, regardless of host OS.
 
-Missing files referenced from `entry` are fatal. Missing files
-referenced from `resources` are warnings.
+Missing files referenced from `commands` are fatal.
 
 ## Unknown fields
 
 - Unknown top-level frontmatter keys MUST be preserved.
 - Unknown keys MAY produce warnings.
 - Unknown keys MUST NOT cause a fatal parse error.
-
-## Version gating
-
-If `ralphloops_version` is strictly greater than the version the
-runtime supports, the runtime MUST refuse to load the package and
-SHOULD emit a clear error explaining the mismatch.
 
 ## Body handling
 
@@ -85,11 +78,16 @@ The body:
 
 ## Template expansion
 
-The format itself does not define template expansion in the body.
-Runtimes MAY implement template expansion (e.g. Ralphify's
-`{{ commands.name }}` and `{{ args.name }}`), but they MUST document
-their templating syntax in their own docs and MUST degrade gracefully
-when a loop doesn't use templating.
+The body supports two standard template placeholders:
+
+- `{{ commands.<name> }}` -- replaced with the output of running the
+  named command from the `commands` list.
+- `{{ args.<name> }}` -- replaced with the value of the named CLI
+  argument from the `args` list.
+
+Runtimes MUST expand these placeholders before passing the body to
+the agent. Runtimes MUST degrade gracefully when a loop doesn't use
+templating.
 
 ## Error reporting
 

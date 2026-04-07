@@ -20,32 +20,31 @@ Create `RALPH.md` with frontmatter and a loop body:
 
 ```markdown
 ---
-name: fix-failing-tests
-description: Find and fix failing tests one failure at a time.
-ralphloops_version: 0.1
-version: 0.1.0
-license: MIT
-entry:
-  validate: scripts/validate.sh
-  test: scripts/run-tests.sh
+agent: claude -p
+commands:
+  - name: tests
+    run: scripts/run-tests.sh
+  - name: validate
+    run: scripts/validate.sh
+args:
+  - module
 ---
 
-# Goal
+# Fix Failing Tests
 
-Fix failing tests one failure at a time.
+Fix failing tests in {{ args.module }} one failure at a time.
 
-# Loop
+{{ commands.validate }}
 
-1. Run the validation commands.
+{{ commands.tests }}
+
+## Instructions
+
+1. Review the test output above.
 2. Identify the highest-signal failure.
 3. Make the smallest useful change.
 4. Re-run validation.
 5. Commit only if checks pass.
-
-# Exit conditions
-
-- All tests pass.
-- No remaining failures reported by `scripts/run-tests.sh`.
 ```
 
 ## 3. Add supporting files
@@ -63,7 +62,7 @@ fix-failing-tests/
     └── repo-conventions.md
 ```
 
-Scripts referenced from `entry` must exist, or the package fails
+Scripts referenced from `commands` must exist, or the package fails
 validation.
 
 ## 4. Validate the package

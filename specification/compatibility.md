@@ -35,13 +35,11 @@ An Executor MUST:
 - Make the markdown body available as instructions to an agent.
 - Resolve bundled files relative to the package root.
 - Refuse to execute packages that escape the package root.
-- Refuse to execute packages whose `ralphloops_version` exceeds what
-  the Executor supports.
 
 An Executor SHOULD:
 
 - Document its execution model publicly.
-- Support declared `entry` commands.
+- Support declared `commands`.
 - Provide clear error messages for validation failures.
 
 Example use cases:
@@ -74,12 +72,10 @@ Example use cases:
 
 ## Declaring compatibility
 
-Runtimes SHOULD state their compatibility class and the
-`ralphloops_version` range they support in their own documentation. For
-example:
+Runtimes SHOULD state their compatibility class in their own
+documentation. For example:
 
-> *FooRuntime implements Ralph Loops at Level 2 (Executor) and supports
-> `ralphloops_version` 0.1.*
+> *FooRuntime implements Ralph Loops at Level 2 (Executor).*
 
 ## Conformance
 

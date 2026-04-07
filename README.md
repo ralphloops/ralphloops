@@ -32,19 +32,27 @@ Minimal `RALPH.md`:
 
 ```markdown
 ---
-name: fix-failing-tests
-description: Fix failing tests one failure at a time.
-ralphloops_version: 0.1
-entry:
-  validate: scripts/validate.sh
-  test: scripts/run-tests.sh
+agent: claude -p
+commands:
+  - name: tests
+    run: scripts/run-tests.sh
+  - name: validate
+    run: scripts/validate.sh
+args:
+  - module
 ---
 
-# Goal
-Fix failing tests one failure at a time.
+# Fix Failing Tests
 
-# Loop
-1. Run the validation commands.
+Fix failing tests in {{ args.module }} one failure at a time.
+
+{{ commands.validate }}
+
+{{ commands.tests }}
+
+## Instructions
+
+1. Review the test output above.
 2. Identify the highest-signal failure.
 3. Make the smallest useful change.
 4. Re-run validation.
@@ -63,9 +71,10 @@ proposes a small, portable package format so that loops can be:
 - **inspectable** by humans
 - **bundled** with the scripts, prompts, and reference files they need
 
-The design intentionally follows the successful pattern used by
-[Agent Skills](https://agentskills.io): a simple directory-based format with a
-canonical entrypoint file and room for bundled resources.
+The format is heavily inspired by the [Agent Skills](https://agentskills.io)
+format. It follows the same philosophy: a simple directory-based format with a
+canonical entrypoint file, optional frontmatter metadata, and template
+placeholders for injecting command outputs and arguments.
 
 ## For creators
 

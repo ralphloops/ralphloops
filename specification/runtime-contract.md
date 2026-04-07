@@ -15,10 +15,7 @@ A runtime MUST:
 3. If the file starts with a `---` line, parse the YAML frontmatter
    block using a safe YAML loader.
 4. Treat everything after the closing `---` as the markdown body.
-5. Validate required metadata (`name`, `description`,
-   `ralphloops_version`) if frontmatter is present.
-6. Refuse to load the package if the declared `ralphloops_version` is
-   strictly greater than the version the runtime supports.
+5. Parse frontmatter fields (`agent`, `commands`, `args`) if present.
 
 A runtime SHOULD:
 
@@ -33,14 +30,13 @@ A runtime MUST:
 - Resolve all relative paths against the package root.
 - Reject any path that escapes the package root via `..`, symlinks, or
   any other mechanism.
-- Treat missing files referenced from `entry` as fatal errors.
-- Treat missing files referenced from `resources` as warnings.
+- Treat missing files referenced from `commands` as fatal errors.
 
 A runtime SHOULD:
 
 - Normalize path separators to the host OS when invoking files.
-- Make resources available to the agent via whatever context mechanism
-  the runtime uses (files, tools, embedded strings, etc.).
+- Make command outputs available to the agent via whatever context
+  mechanism the runtime uses (files, tools, embedded strings, etc.).
 
 ## Executing the loop
 
@@ -49,14 +45,14 @@ A runtime MUST:
 - Make the `RALPH.md` body available to the agent as instructions.
 - Make bundled resources reachable from inside the agent's working
   context.
-- Execute declared `entry` commands via its own command execution
-  mechanism when asked.
+- Execute declared `commands` via its own command execution mechanism
+  when asked.
 
 A runtime SHOULD document, in its own docs:
 
 - How iteration is performed (reset per loop, accumulate, etc.).
-- How context is constructed from the package root and resources.
-- How commands declared under `entry` are surfaced to the agent.
+- How context is constructed from the package root.
+- How declared `commands` are surfaced to the agent.
 - How the runtime decides when the loop terminates.
 
 ## Security and safety

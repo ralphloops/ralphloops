@@ -81,63 +81,47 @@
     <li>markdown body content</li>
   </ol>
   <pre><code>---
-name: fix-failing-tests
-description: Find and fix failing tests one failure at a time.
-version: 0.1
-ralphloops_version: 0.1
-license: MIT
-compatible_runtimes:
-  - ralphify &gt;=0.3.0
-triggers:
-  - failing tests
-  - test suite is red
-entry:
-  validate: scripts/validate.sh
-  test: scripts/run-tests.sh
-resources:
-  - docs/repo-conventions.md
+agent: claude -p
+commands:
+  - name: tests
+    run: scripts/run-tests.sh
+  - name: validate
+    run: scripts/validate.sh
+args:
+  - module
 ---
 
-# Goal
-Fix failing tests one failure at a time.
+# Fix Failing Tests
 
-# Loop
-1. Run the validation commands.
-2. Identify the next highest-signal failure.
+Fix failing tests in {{ args.module }} one failure at a time.
+
+{{ commands.validate }}
+
+{{ commands.tests }}
+
+## Instructions
+
+1. Review the test output above.
+2. Pick the highest-signal failing test.
 3. Make the smallest useful change.
 4. Re-run validation.
 5. Commit only if checks pass.</code></pre>
 
   <h2 id="metadata">6. Metadata fields</h2>
 
-  <h3>Required (if frontmatter is present)</h3>
-  <ul>
-    <li><code>name</code></li>
-    <li><code>description</code></li>
-    <li><code>ralphloops_version</code></li>
-  </ul>
-  <p>
-    If frontmatter is omitted entirely, runtimes MAY still load the loop,
-    but the package is considered minimally described. Frontmatter is
-    strongly recommended for ecosystem compatibility.
-  </p>
-
-  <h3>Recommended</h3>
+  <p>The frontmatter supports exactly three fields:</p>
   <table>
-    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+    <thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead>
     <tbody>
-      <tr><td><code>version</code></td><td>Package version.</td></tr>
-      <tr><td><code>license</code></td><td>SPDX license identifier.</td></tr>
-      <tr><td><code>author</code></td><td>Author name or handle.</td></tr>
-      <tr><td><code>homepage</code></td><td>Project homepage URL.</td></tr>
-      <tr><td><code>repository</code></td><td>Source repository URL.</td></tr>
-      <tr><td><code>tags</code></td><td>Free-form tags for discovery.</td></tr>
-      <tr><td><code>compatible_runtimes</code></td><td>Runtimes/version ranges known to support the package.</td></tr>
-      <tr><td><code>triggers</code></td><td>Human-readable phrases describing when to select this loop.</td></tr>
-      <tr><td><code>entry</code></td><td>Map of named entrypoints (typically relative paths). Suggested keys: <code>validate</code>, <code>test</code>, <code>lint</code>, <code>plan</code>, <code>bootstrap</code>.</td></tr>
-      <tr><td><code>resources</code></td><td>List of supporting files that are particularly important for the loop.</td></tr>
+      <tr><td><code>agent</code></td><td>string</td><td>The command to run (e.g., <code>claude -p</code>).</td></tr>
+      <tr><td><code>commands</code></td><td>list of objects</td><td>Each object has a <code>name</code> (identifier used in the body via <code>{{ commands.&lt;name&gt; }}</code>) and a <code>run</code> (shell command or script path to execute).</td></tr>
+      <tr><td><code>args</code></td><td>list of strings</td><td>Argument names that become CLI flags. Referenced in the body via <code>{{ args.&lt;name&gt; }}</code>.</td></tr>
     </tbody>
   </table>
+  <p>
+    If frontmatter is omitted entirely, runtimes MAY still load the loop,
+    but the package is considered minimally described.
+  </p>
 
   <h2 id="body">7. Markdown body semantics</h2>
   <p>
@@ -205,12 +189,7 @@ Fix failing tests one failure at a time.
   </p>
 
   <h2 id="versioning">15. Versioning</h2>
-  <p><code>ralphloops_version</code> controls spec compatibility.</p>
-  <ul>
-    <li><code>0.x</code> — draft / experimental</li>
-    <li><code>1.x</code> — stable compatibility line</li>
-  </ul>
-  <p>Breaking changes require an RFC and explicit compatibility notes.</p>
+  <p>The specification itself is versioned through the RFC process in the canonical repository. Breaking changes require an RFC and explicit compatibility notes.</p>
 
   <hr>
   <p class="muted small">

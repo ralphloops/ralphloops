@@ -67,9 +67,9 @@
     <pre class="hero-code"><code>my-loop/
 ├── RALPH.md
 ├── scripts/
-│   └── validate.sh
-└── context/
-    └── coding-guidelines.md</code></pre>
+│   └── run-tests.sh
+└── docs/
+    └── conventions.md</code></pre>
   </div>
 </section>
 
@@ -86,9 +86,9 @@
           docs beside it.
         </p>
         <p>
-          Compatible runtimes discover <code>RALPH.md</code>, parse its
-          metadata, read its instructions, and make the bundled resources
-          available to the agent as it loops.
+          Compatible runtimes discover <code>RALPH.md</code>, run the
+          specified <code>agent</code>, execute <code>commands</code>, and
+          inject <code>args</code> into the loop instructions.
         </p>
         <p>
           The format is deliberately small. It does not mandate a runtime,
@@ -98,23 +98,23 @@
       </div>
       <div>
         <pre><code>---
-name: fix-failing-tests
-description: Fix failing tests one failure at a time.
-ralphloops_version: 0.1
-entry:
-  validate: scripts/validate.sh
-  test: scripts/run-tests.sh
+agent: claude -p
+commands:
+  - name: tests
+    run: scripts/run-tests.sh
+  - name: lint
+    run: scripts/lint.sh
+args:
+  - focus
 ---
 
-# Goal
-Fix failing tests one failure at a time.
+# Fix Failing Tests
 
-# Loop
-1. Run the validation commands.
-2. Identify the highest-signal failure.
-3. Make the smallest useful change.
-4. Re-run validation.
-5. Commit only if checks pass.</code></pre>
+Fix failing tests with focus on {{ args.focus }}.
+
+{{ commands.tests }}
+
+{{ commands.lint }}</code></pre>
       </div>
     </div>
   </div>
@@ -228,6 +228,10 @@ Fix failing tests one failure at a time.
       This project proposes a portable package format for sharing and
       running Ralph-style loops across tools — it does not claim ownership
       of the broader Ralph methodology itself.
+    </p>
+    <p>
+      The RALPH.md format is heavily inspired by the
+      <a href="https://agentskills.io">Agent Skills format</a> from agentskills.io.
     </p>
     <p>
       <a class="btn" href="/governance/">Read the governance model →</a>
