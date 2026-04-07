@@ -23,7 +23,7 @@ when an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the maintainers listed in [`GOVERNANCE.md`](GOVERNANCE.md). All
+reported to the project maintainers. All
 complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution

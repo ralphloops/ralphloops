@@ -10,8 +10,6 @@ live in the other documents in this directory:
 - [`format.md`](format.md) — the package format itself
 - [`metadata.md`](metadata.md) — frontmatter fields and their semantics
 - [`directory-layout.md`](directory-layout.md) — directory structure rules
-- [`runtime-contract.md`](runtime-contract.md) — what runtimes must do
-- [`compatibility.md`](compatibility.md) — compatibility classes
 - [`changelog.md`](changelog.md) — spec version history
 
 ## Goals
@@ -68,8 +66,7 @@ Geoffrey Huntley's Ralph loop methodology.
 - **Entrypoint** — the `RALPH.md` file itself.
 - **Bundled resource** — any other file inside the package root.
 - **Runtime** — a tool that discovers, parses, and/or executes packages.
-- **Compatibility class** — the level of support a runtime declares (see
-  [`compatibility.md`](compatibility.md)).
+- **Compatibility class** — the level of support a runtime declares.
 
 ## Normative keywords
 

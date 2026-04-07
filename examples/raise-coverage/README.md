@@ -1,20 +1,15 @@
 # raise-coverage
 
-A Ralph Loop for adding focused tests to under-tested modules without
-chasing a coverage percentage.
+A Ralph Loop for steadily lifting test coverage on under-tested modules.
 
 The loop deliberately caps itself at a declared target and refuses to
 write tests for trivial pass-through code. That keeps the resulting
 test suite useful instead of noisy.
 
-## What you need to wire up
+## Commands
 
-- `scripts/run-tests.sh` — runs the existing test suite
-- `scripts/report-coverage.sh` — emits a coverage report the agent can read
-- `scripts/validate.sh` — optional preflight checks
+- `tests` — runs `uv run pytest -x`
+- `coverage` — runs `uv run pytest --cov --cov-report=term-missing`
 
-## What you should edit
-
-Update `docs/coverage-targets.md` (create it when you adapt the loop)
-to declare which modules are in scope and what the target percentage
-is for each.
+Adjust these in the RALPH.md frontmatter to match your project's
+tooling.

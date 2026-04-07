@@ -1,10 +1,10 @@
 ---
-agent: claude -p
+agent: codex --full-auto
 commands:
   - name: tests
-    run: scripts/run-tests.sh
+    run: uv run pytest -x
   - name: coverage
-    run: scripts/report-coverage.sh
+    run: uv run pytest --cov --cov-report=term-missing
 args:
   - target_module
 ---

@@ -1,139 +1,142 @@
 # Ralph Loops
 
-> Specification and documentation for **Ralph Loops**, an open proposed format
-> for portable Ralph-style agent loops.
+AI coding agents are powerful, but their workflows are trapped — pasted into
+chat windows, hardcoded into one tool, lost when the session ends.
 
-Ralph Loops is an open proposed format for portable Ralph-style agent loops.
-A Ralph Loop is a directory containing a required `RALPH.md` file plus any
-supporting scripts, prompts, plans, templates, examples, or other resources
-needed to run the loop. The format is designed to make loops easier to share,
-version, inspect, and run across compatible tools.
+Ralph Loops is a minimal, open format for packaging autonomous agent loops as
+portable directories. A `RALPH.md` file describes what the agent should do,
+which commands to run for feedback, and what arguments to accept. Any compatible
+runtime can execute it. The format works well for ongoing gardening tasks —
+hunting bugs, keeping docs in sync, bumping dependencies — the kind of work
+that never really ends. Run them interactively, or put them on a cron.
 
-> **Status.** Ralph Loops is an *open proposed format*, not a standard. The
-> current format version is `0.1` and all `0.x` versions are draft.
+> **Status:** v0.1 draft. The format is a proposal — it earns adoption through
+> usefulness, not authority.
 
-## What a Ralph Loop looks like
+## What it looks like
 
 ```
-fix-failing-tests/
+bug-hunter/
 ├── RALPH.md
 ├── scripts/
-│   ├── run-tests.sh
-│   └── validate.sh
-└── docs/
-    └── repo-conventions.md
+│   └── run-tests.sh
+└── prompts/
+    └── edge-cases.md
 ```
-
-Every Ralph Loop is a directory. The only required file is `RALPH.md` — the
-canonical entrypoint. Everything else is optional bundled context: scripts,
-templates, fixtures, reference docs, or any other files the loop needs.
-
-Minimal `RALPH.md`:
 
 ```markdown
 ---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
-    run: scripts/run-tests.sh
-  - name: validate
-    run: scripts/validate.sh
+    run: uv run pytest -x
 args:
-  - module
+  - bug_report
 ---
 
-# Fix Failing Tests
+# Bug Hunter
 
-Fix failing tests in {{ args.module }} one failure at a time.
+Reproduce, localize, and patch the reported bug.
 
-{{ commands.validate }}
+## Bug report
+{{ args.bug_report }}
 
+## Test results
 {{ commands.tests }}
 
 ## Instructions
-
-1. Review the test output above.
-2. Identify the highest-signal failure.
-3. Make the smallest useful change.
-4. Re-run validation.
-5. Commit only if checks pass.
+1. Read the bug report above.
+2. Write a failing test to reproduce the bug.
+3. Localize the root cause.
+4. Make the smallest useful fix.
+5. Run the full test suite. Commit only if everything passes.
 ```
 
-## Why this format exists
+### How it works
 
-Autonomous agent loops are powerful, but most of them live as one-off prompts
-pasted into chat windows or hard-coded into a single tool. Ralph Loops
-proposes a small, portable package format so that loops can be:
+- **`agent`** — the command that runs the agent (`claude`, `codex`, or anything
+  that reads stdin)
+- **`commands`** — deterministic feedback commands whose output gets injected
+  via `{{ commands.<name> }}`
+- **`args`** — parameterize the loop with CLI arguments, injected via
+  `{{ args.<name> }}`
 
-- **portable** across tools and runtimes
-- **shareable** as reusable packages
-- **versionable** in git
-- **inspectable** by humans
-- **bundled** with the scripts, prompts, and reference files they need
+The body is the agent's instructions. The runtime expands the templates, runs
+the commands, and pipes everything to the agent. Write the loop once; run it
+with any compatible runtime.
 
-The format is heavily inspired by the [Agent Skills](https://agentskills.io)
-format. It follows the same philosophy: a simple directory-based format with a
-canonical entrypoint file, optional frontmatter metadata, and template
-placeholders for injecting command outputs and arguments.
+## What makes this different from a directory of prompts
 
-## For creators
+Three things the format adds beyond "markdown file in a folder":
 
-- [Quickstart](loop-creation/quickstart.md) — author your first loop
-- [Best practices](loop-creation/best-practices.md) — authoring guidelines
-- [Templates](loop-creation/templates/) — starter packages
+1. **Feedback commands.** The runtime executes `commands` between iterations and
+   injects their output into the prompt. The agent sees fresh test results,
+   coverage reports, or lint output every loop.
+2. **Arguments.** Loops are parameterized with `args` so the same loop works
+   across different modules, scopes, or inputs.
+3. **Portability contract.** The format defines how runtimes discover, parse,
+   and execute loops — so a loop written for one tool works with another.
 
-## For implementors
+## Real-world usage
 
-- [Overview](implementors/overview.md) — how runtimes should load loops
-- [Discovery](implementors/discovery.md)
-- [Parsing](implementors/parsing.md)
-- [Execution model](implementors/execution-model.md)
-- [Test cases](implementors/test-cases.md) — conformance corpus
+Ralph Loops are used in production on
+[agr](https://github.com/computerlovetech/agr) (a package manager for AI
+agents) and [ralphify](https://github.com/computerlovetech/ralphify) (the
+reference runtime). Loops like `bug-hunter`, `refactor-module`, and `write-docs`
+have driven real changes:
 
-## Specification
+- **Bug fixes** — token leak vulnerability found and patched with a regression
+  test
+- **Refactoring** — function complexity reduced from 25 to 13, 19 to 9, 16 to 7
+  across multiple modules
+- **Dead code removal** — 10+ unused functions identified and removed
+- **Documentation** — README rewritten end-to-end from loop output
 
-The canonical specification lives under [`specification/`](specification/):
-
-- [Overview](specification/overview.md)
-- [Format](specification/format.md)
-- [Metadata](specification/metadata.md)
-- [Directory layout](specification/directory-layout.md)
-- [Runtime contract](specification/runtime-contract.md)
-- [Compatibility](specification/compatibility.md)
-- [Changelog](specification/changelog.md)
-
-A JSON Schema for frontmatter metadata is available in
-[`schemas/metadata.schema.json`](schemas/metadata.schema.json).
+Every commit from a loop run carries
+`Co-authored-by: Ralphify <noreply@ralphify.co>`.
 
 ## Examples
 
-Six complete example packages live under [`examples/`](examples/):
+Six complete loop packages ship with the spec under [`examples/`](examples/).
+Most are ongoing gardening tasks — the kind of thing you schedule on a cron
+or kick off whenever a codebase needs attention:
 
-- [`fix-failing-tests/`](examples/fix-failing-tests/)
-- [`bug-hunter/`](examples/bug-hunter/)
-- [`raise-coverage/`](examples/raise-coverage/)
-- [`refactor-module/`](examples/refactor-module/)
-- [`write-docs/`](examples/write-docs/)
-- [`dependency-updater/`](examples/dependency-updater/)
+| Loop | Agent | What it does |
+|------|-------|-------------|
+| [`bug-hunter`](examples/bug-hunter/) | `claude` | Continuously hunt for bugs and edge cases |
+| [`improve-codebase`](examples/improve-codebase/) | `codex` | Continuously find and fix code quality issues |
+| [`raise-coverage`](examples/raise-coverage/) | `codex` | Steadily lift test coverage over time |
+| [`refactor-module`](examples/refactor-module/) | `claude` | Clean up internals without changing behavior |
+| [`write-docs`](examples/write-docs/) | `codex` | Keep docs in sync with code as it changes |
+| [`dependency-updater`](examples/dependency-updater/) | `claude` | Keep dependencies current and secure |
 
-## Governance
+## Inspiration
 
-Ralph Loops is maintained through this public repository. Breaking changes go
-through a lightweight RFC process under [`rfcs/`](rfcs/). See
-[`GOVERNANCE.md`](GOVERNANCE.md) and [`VERSIONING.md`](VERSIONING.md).
+Ralph Loops draws from two sources:
 
-## Relationship to Ralphify and other runtimes
+- [Geoffrey Huntley's Ralph loop methodology](https://ghuntley.com/ralph/) —
+  the concept of autonomous agent loops that iterate with deterministic feedback
+  until a task is done. Ralph Loops packages that concept; it does not own or
+  gate the methodology.
+- [Agent Skills](https://agentskills.io) — Anthropic's directory-based format
+  for agent capabilities. Ralph Loops borrows the packaging philosophy
+  (directory + entrypoint + frontmatter + templates) and applies it to a
+  different problem: **iterative autonomous loops with feedback commands** rather
+  than one-shot agent skills.
 
-[Ralphify](https://ralphify.co/) is one reference implementation and runtime
-for Ralph Loops. Any other tool is welcome to implement the format — it is
-intentionally runtime-agnostic. Runtimes declare which
-[compatibility class](specification/compatibility.md) they support.
+## Specification
 
-## Attribution
+The full spec lives under [`specification/`](specification/):
 
-Ralph Loops is a community-oriented format proposal **inspired by**
-[Geoffrey Huntley's Ralph loop methodology](https://ghuntley.com/ralph/). This
-repository defines the package format, **not** the Ralph methodology itself.
+- [Format](specification/format.md) — package structure
+- [Metadata](specification/metadata.md) — frontmatter fields
+- [Directory layout](specification/directory-layout.md) — conventions
+
+## Project
+
+The format evolves through public discussion in the
+[GitHub repo](https://github.com/ralphloops/ralphloops).
+[Ralphify](https://ralphify.co/) is one reference runtime — others are welcome.
 
 ## License
 

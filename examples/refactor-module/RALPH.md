@@ -1,10 +1,10 @@
 ---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
-    run: scripts/run-tests.sh
+    run: uv run pytest -x
   - name: lint
-    run: scripts/lint.sh
+    run: uv run ruff check .
 args:
   - module
 ---

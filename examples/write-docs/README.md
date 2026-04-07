@@ -1,7 +1,11 @@
 # write-docs
 
-A Ralph Loop for bringing project documentation back in line with the
-code. Focused on small, grounded fixes — never invented behavior.
+A Ralph Loop for keeping project documentation in sync with code.
+Focused on small, grounded fixes — never invented behavior.
 
-Wire `scripts/build-docs.sh` to your docs builder (MkDocs, Sphinx,
-Docusaurus, etc.) before running the loop.
+## Commands
+
+- `build-docs` — runs `uv run mkdocs build --strict`
+
+Adjust this in the RALPH.md frontmatter to match your docs builder
+(MkDocs, Sphinx, Docusaurus, etc.).

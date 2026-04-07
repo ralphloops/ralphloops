@@ -1,10 +1,10 @@
 ---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
-    run: scripts/run-tests.sh
+    run: uv run pytest -x
   - name: outdated
-    run: scripts/list-outdated.sh
+    run: pip list --outdated
 args:
   - tier
 ---

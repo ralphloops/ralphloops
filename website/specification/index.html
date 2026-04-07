@@ -15,10 +15,7 @@
     <a class="brand" href="/"><span class="brand-mark">🔁</span><span class="brand-name">Ralph Loops</span><span class="brand-tag">proposed format</span></a>
     <nav class="nav-links">
       <a href="/specification/">Specification</a>
-      <a href="/loop-creation/quickstart/">Quickstart</a>
-      <a href="/implementors/overview/">Implementors</a>
       <a href="/examples/">Examples</a>
-      <a href="/governance/">Governance</a>
       <a class="nav-github" href="https://github.com/ralphloops/ralphloops">GitHub</a>
     </nav>
   </div>
@@ -62,17 +59,11 @@
 
   <h2 id="layout">4. Allowed structure</h2>
   <p>There are no required subdirectories beyond <code>RALPH.md</code>. Example:</p>
-  <pre><code>fix-failing-tests/
+  <pre><code>bug-hunter/
 ├── RALPH.md
-├── scripts/
-│   ├── run-tests.sh
-│   └── validate.sh
-├── prompts/
-│   └── edge-cases.md
-├── templates/
-│   └── issue-comment.md
-└── docs/
-    └── repo-conventions.md</code></pre>
+├── README.md
+└── prompts/
+    └── edge-cases.md</code></pre>
 
   <h2 id="ralph-md">5. RALPH.md file structure</h2>
   <p><code>RALPH.md</code> consists of:</p>
@@ -81,31 +72,36 @@
     <li>markdown body content</li>
   </ol>
   <pre><code>---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
-    run: scripts/run-tests.sh
-  - name: validate
-    run: scripts/validate.sh
+    run: uv run pytest -x
+  - name: lint
+    run: uv run ruff check .
 args:
-  - module
+  - bug_report
 ---
 
-# Fix Failing Tests
+# Bug Hunter
 
-Fix failing tests in {{ args.module }} one failure at a time.
+Reproduce, localize, and patch the reported bug.
 
-{{ commands.validate }}
+## Bug report
+{{ args.bug_report }}
 
+## Test results
 {{ commands.tests }}
+
+## Lint
+{{ commands.lint }}
 
 ## Instructions
 
-1. Review the test output above.
-2. Pick the highest-signal failing test.
-3. Make the smallest useful change.
-4. Re-run validation.
-5. Commit only if checks pass.</code></pre>
+1. Read the bug report above.
+2. Write a failing test to reproduce the bug.
+3. Localize the root cause.
+4. Make the smallest useful fix.
+5. Run tests and lint. Commit only if everything passes.</code></pre>
 
   <h2 id="metadata">6. Metadata fields</h2>
 

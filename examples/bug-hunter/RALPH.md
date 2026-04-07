@@ -1,10 +1,10 @@
 ---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
-    run: scripts/run-tests.sh
-  - name: validate
-    run: scripts/validate.sh
+    run: uv run pytest -x
+  - name: lint
+    run: uv run ruff check .
 args:
   - bug_report
 ---
@@ -19,9 +19,9 @@ Reproduce, localize, and patch the reported bug.
 
 ## Current state
 
-{{ commands.validate }}
-
 {{ commands.tests }}
+
+{{ commands.lint }}
 
 ## Instructions
 

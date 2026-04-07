@@ -1,8 +1,8 @@
 ---
-agent: claude -p
+agent: codex --full-auto
 commands:
   - name: build-docs
-    run: scripts/build-docs.sh
+    run: uv run mkdocs build --strict
 args:
   - scope
 ---

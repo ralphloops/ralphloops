@@ -1,14 +1,13 @@
 ---
-name: Bug in a fixture or example
-about: Report a problem with a conformance fixture or example loop
+name: Bug in an example
+about: Report a problem with an example loop
 title: "[bug] "
 labels: ["bug", "examples"]
 ---
 
 ## Where
 
-<!-- Path to the fixture or example (e.g. tests/valid/full/ or
-     examples/fix-failing-tests/). -->
+<!-- Path to the example (e.g. examples/bug-hunter/). -->
 
 ## What's wrong
 

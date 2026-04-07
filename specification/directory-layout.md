@@ -19,20 +19,11 @@ Most real packages bundle supporting resources. A typical package might
 look like:
 
 ```
-fix-failing-tests/
+bug-hunter/
 ├── RALPH.md
 ├── README.md
-├── scripts/
-│   ├── run-tests.sh
-│   └── validate.sh
-├── prompts/
-│   └── edge-cases.md
-├── templates/
-│   └── issue-comment.md
-├── docs/
-│   └── repo-conventions.md
-└── examples/
-    └── sample-failure.txt
+└── prompts/
+    └── edge-cases.md
 ```
 
 There are no required subdirectories beyond `RALPH.md`.

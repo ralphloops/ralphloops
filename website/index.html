@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ralph Loops — An open proposed format for portable Ralph-style agent loops</title>
-  <meta name="description" content="Ralph Loops is an open proposed format for packaging Ralph-style autonomous agent loops as portable directories centered on a RALPH.md file.">
+  <title>Ralph Loops — A minimal, open format for portable agent loops</title>
+  <meta name="description" content="Ralph Loops is a minimal, open format for packaging autonomous agent loops as portable directories centered on a RALPH.md file.">
   <meta name="author" content="Ralph Loops contributors">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ralph Loops — An open proposed format for portable Ralph-style agent loops">
-  <meta property="og:description" content="Package an autonomous loop as a directory with RALPH.md and any supporting files. Write once, version it in git, run it across compatible tools.">
+  <meta property="og:title" content="Ralph Loops — A minimal, open format for portable agent loops">
+  <meta property="og:description" content="Define the task, feedback commands, and constraints in a RALPH.md file. Bundle scripts alongside it. Any compatible runtime can execute it.">
   <meta property="og:url" content="https://ralphloops.io/">
   <meta property="og:site_name" content="Ralph Loops">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Ralph Loops — An open proposed format">
-  <meta name="twitter:description" content="Package an autonomous loop as a directory with RALPH.md and any supporting files.">
+  <meta name="twitter:title" content="Ralph Loops — A minimal, open format for portable agent loops">
+  <meta name="twitter:description" content="Define the task, feedback commands, and constraints in a RALPH.md file. Any compatible runtime can execute it.">
 
   <meta name="theme-color" content="#ffffff">
   <link rel="canonical" href="https://ralphloops.io/">
@@ -34,10 +34,7 @@
     </a>
     <nav class="nav-links">
       <a href="/specification/">Specification</a>
-      <a href="/loop-creation/quickstart/">Quickstart</a>
-      <a href="/implementors/overview/">Implementors</a>
       <a href="/examples/">Examples</a>
-      <a href="/governance/">Governance</a>
       <a class="nav-github" href="https://github.com/ralphloops/ralphloops">GitHub</a>
     </nav>
   </div>
@@ -47,21 +44,19 @@
 
 <section class="hero">
   <div class="container">
-    <p class="eyebrow">An open proposed format</p>
     <h1>Ralph Loops</h1>
     <p class="lede">
-      An open proposed format for portable Ralph-style agent loops.
+      A minimal, open format for packaging autonomous agent loops
+      as portable directories.
     </p>
     <p class="sub">
-      Package an autonomous loop as a directory with <code>RALPH.md</code>
-      and any supporting files. Write once, version it in git, and run it
-      across compatible tools.
+      Define the task, feedback commands, and constraints in a
+      <code>RALPH.md</code> file. Bundle scripts and docs alongside it.
+      Any compatible runtime can execute it.
     </p>
     <div class="cta-row">
       <a class="btn btn-primary" href="/specification/">Read the spec</a>
-      <a class="btn" href="/loop-creation/quickstart/">Create your first loop</a>
-      <a class="btn" href="/implementors/overview/">Implement a runtime</a>
-      <a class="btn btn-ghost" href="/examples/">Browse examples</a>
+      <a class="btn" href="/examples/">Browse examples</a>
     </div>
 
     <pre class="hero-code"><code>my-loop/
@@ -98,7 +93,7 @@
       </div>
       <div>
         <pre><code>---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
     run: uv run pytest -x
@@ -144,7 +139,7 @@ Each iteration:
       <div class="card"><h3>Git-native</h3><p>Version, diff, and review loops like any other code artifact.</p></div>
       <div class="card"><h3>Reusable</h3><p>Share loops across projects, teams, and tools without rewriting them.</p></div>
       <div class="card"><h3>Inspectable</h3><p>Plain markdown and plain files. Humans can read every byte.</p></div>
-      <div class="card"><h3>Better than chat</h3><p>Stop pasting giant prompts into chat windows that forget them.</p></div>
+      <div class="card"><h3>Beyond chat</h3><p>Stop pasting giant prompts into chat windows that forget them.</p></div>
     </div>
   </div>
 </section>
@@ -192,20 +187,19 @@ Each iteration:
           <li>Scripts the agent can invoke</li>
           <li>Fixtures and sample inputs</li>
         </ul>
-        <p><a class="btn" href="/loop-creation/quickstart/">Quickstart →</a></p>
+        <p><a class="btn" href="/examples/">Browse examples →</a></p>
       </div>
       <div>
-        <h2>For implementors</h2>
-        <p>A compatible runtime loads a Ralph Loop and makes it executable by an agent.</p>
+        <h2>For runtime authors</h2>
+        <p>The <a href="/specification/">specification</a> defines everything a runtime needs to load and execute loops.</p>
         <ul>
           <li>Locate <code>RALPH.md</code></li>
           <li>Parse optional YAML frontmatter</li>
           <li>Read the markdown body as instructions</li>
+          <li>Expand <code>{{ commands.* }}</code> and <code>{{ args.* }}</code> templates</li>
           <li>Resolve bundled files relative to the package root</li>
-          <li>Reject path traversal outside the root</li>
-          <li>Expose an execution contract to the agent</li>
         </ul>
-        <p><a class="btn" href="/implementors/overview/">Implementor guide →</a></p>
+        <p><a class="btn" href="/specification/">Read the spec →</a></p>
       </div>
     </div>
   </div>
@@ -216,7 +210,7 @@ Each iteration:
     <h2>Examples</h2>
     <p class="muted">Six reference loop packages shipped with the specification repo.</p>
     <div class="cards">
-      <div class="card"><h3>fix-failing-tests</h3><p>Find and fix failing tests one failure at a time.</p></div>
+      <div class="card"><h3>improve-codebase</h3><p>Continuously find and fix code quality issues.</p></div>
       <div class="card"><h3>bug-hunter</h3><p>Reproduce, localize, and patch reported bugs.</p></div>
       <div class="card"><h3>raise-coverage</h3><p>Add focused tests to lift coverage on under-tested modules.</p></div>
       <div class="card"><h3>refactor-module</h3><p>Refactor a single module against a set of invariants.</p></div>
@@ -229,27 +223,20 @@ Each iteration:
 
 <section class="section section-alt">
   <div class="container">
-    <h2>Governance</h2>
+    <h2>Inspiration</h2>
     <p>
-      Ralph Loops is an <strong>open proposed format</strong>. It evolves
-      through public discussion in the
+      Ralph Loops draws from
+      <a href="https://ghuntley.com/ralph/">Geoffrey Huntley&rsquo;s Ralph loop methodology</a>
+      (the concept of autonomous loops with deterministic feedback) and
+      <a href="https://agentskills.io">Agent Skills</a> (the directory-based
+      packaging philosophy). It applies both to a different problem:
+      <strong>iterative autonomous loops with feedback commands</strong>,
+      not one-shot agent skills.
+    </p>
+    <p>
+      The format evolves through public discussion in the
       <a href="https://github.com/ralphloops/ralphloops">ralphloops/ralphloops</a>
-      repository, with versioned specifications and a lightweight RFC
-      process for breaking changes.
-    </p>
-    <p>
-      Ralph Loops is inspired by
-      <a href="https://ghuntley.com/ralph/">Geoffrey Huntley&rsquo;s Ralph loop methodology</a>.
-      This project proposes a portable package format for sharing and
-      running Ralph-style loops across tools — it does not claim ownership
-      of the broader Ralph methodology itself.
-    </p>
-    <p>
-      The RALPH.md format is heavily inspired by the
-      <a href="https://agentskills.io">Agent Skills format</a> from agentskills.io.
-    </p>
-    <p>
-      <a class="btn" href="/governance/">Read the governance model →</a>
+      repository.
     </p>
   </div>
 </section>
@@ -274,24 +261,14 @@ Each iteration:
       </ul>
     </div>
     <div>
-      <h4>Creators</h4>
+      <h4>Examples</h4>
       <ul>
-        <li><a href="/loop-creation/quickstart/">Quickstart</a></li>
-        <li><a href="/loop-creation/best-practices/">Best practices</a></li>
-        <li><a href="/examples/">Examples</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Implementors</h4>
-      <ul>
-        <li><a href="/implementors/overview/">Overview</a></li>
-        <li><a href="/implementors/reference/">Reference</a></li>
+        <li><a href="/examples/">Browse examples</a></li>
       </ul>
     </div>
     <div>
       <h4>Project</h4>
       <ul>
-        <li><a href="/governance/">Governance</a></li>
         <li><a href="https://github.com/ralphloops/ralphloops">GitHub</a></li>
         <li><a href="https://github.com/ralphloops/ralphloops/discussions">Discussions</a></li>
       </ul>

@@ -15,10 +15,7 @@
     <a class="brand" href="/"><span class="brand-mark">🔁</span><span class="brand-name">Ralph Loops</span><span class="brand-tag">proposed format</span></a>
     <nav class="nav-links">
       <a href="/specification/">Specification</a>
-      <a href="/loop-creation/quickstart/">Quickstart</a>
-      <a href="/implementors/overview/">Implementors</a>
       <a href="/examples/">Examples</a>
-      <a href="/governance/">Governance</a>
       <a class="nav-github" href="https://github.com/ralphloops/ralphloops">GitHub</a>
     </nav>
   </div>
@@ -28,47 +25,44 @@
   <p class="eyebrow">Gallery</p>
   <h1>Examples</h1>
   <p class="sub muted">
-    Six reference Ralph Loops, each shipped as a complete directory package in
+    Reference Ralph Loops, each shipped as a complete directory package in
     the <a href="https://github.com/ralphloops/ralphloops/tree/main/examples">canonical repository</a>.
     Clone the repo to inspect the full source of every loop.
   </p>
 
   <div class="cards">
     <div class="card">
-      <h3>fix-failing-tests</h3>
-      <p>Find and fix failing tests one failure at a time. Ships with <code>scripts/run-tests.sh</code>, <code>scripts/validate.sh</code>, and repo conventions docs.</p>
+      <h3>bug-hunter</h3>
+      <p>Continuously hunt for bugs and edge cases. Bundles an edge-cases prompt file.</p>
     </div>
     <div class="card">
-      <h3>bug-hunter</h3>
-      <p>Reproduce, localize, and patch reported bugs. Bundles an edge-cases prompt file.</p>
+      <h3>improve-codebase</h3>
+      <p>Find and fix code quality issues one at a time.</p>
     </div>
     <div class="card">
       <h3>raise-coverage</h3>
-      <p>Add focused tests to lift coverage on under-tested modules.</p>
+      <p>Steadily lift test coverage on under-tested modules.</p>
     </div>
     <div class="card">
       <h3>refactor-module</h3>
-      <p>Refactor a single module against a set of invariants. Bundles a PR description template.</p>
+      <p>Clean up module internals without changing behavior. Bundles a PR description template.</p>
     </div>
     <div class="card">
       <h3>write-docs</h3>
-      <p>Generate and revise documentation for existing code.</p>
+      <p>Keep docs in sync with code as it changes.</p>
     </div>
     <div class="card">
       <h3>dependency-updater</h3>
-      <p>Upgrade dependencies one at a time with tests green.</p>
+      <p>Keep dependencies current and secure.</p>
     </div>
   </div>
 
   <h2>Anatomy of an example</h2>
-  <pre><code>fix-failing-tests/
+  <pre><code>bug-hunter/
 ├── RALPH.md             # required entrypoint
 ├── README.md            # what this loop is for
-├── scripts/
-│   ├── run-tests.sh
-│   └── validate.sh
-└── docs/
-    └── repo-conventions.md</code></pre>
+└── prompts/
+    └── edge-cases.md    # bundled context</code></pre>
 
   <p class="muted small">Contribute your own by opening a PR against <a href="https://github.com/ralphloops/ralphloops">ralphloops/ralphloops</a>.</p>
 </main>

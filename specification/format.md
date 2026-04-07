@@ -35,17 +35,11 @@ There are no required subdirectories beyond `RALPH.md`. A typical
 package might look like:
 
 ```
-fix-failing-tests/
+bug-hunter/
 ├── RALPH.md
-├── scripts/
-│   ├── run-tests.sh
-│   └── validate.sh
-├── prompts/
-│   └── edge-cases.md
-├── templates/
-│   └── issue-comment.md
-└── docs/
-    └── repo-conventions.md
+├── README.md
+└── prompts/
+    └── edge-cases.md
 ```
 
 ## 5. `RALPH.md` file structure
@@ -59,31 +53,36 @@ Example:
 
 ```markdown
 ---
-agent: claude -p
+agent: claude -p --dangerously-skip-permissions
 commands:
   - name: tests
-    run: scripts/run-tests.sh
-  - name: validate
-    run: scripts/validate.sh
+    run: uv run pytest -x
+  - name: lint
+    run: uv run ruff check .
 args:
-  - module
+  - bug_report
 ---
 
-# Fix Failing Tests
+# Bug Hunter
 
-Fix failing tests in {{ args.module }} one failure at a time.
+Reproduce, localize, and patch the reported bug.
 
-{{ commands.validate }}
+## Bug report
+{{ args.bug_report }}
 
+## Test results
 {{ commands.tests }}
+
+## Lint
+{{ commands.lint }}
 
 ## Instructions
 
-1. Review the test output above.
-2. Pick the highest-signal failing test.
-3. Make the smallest useful change.
-4. Re-run validation.
-5. Commit only if checks pass.
+1. Read the bug report above.
+2. Write a failing test to reproduce the bug.
+3. Localize the root cause.
+4. Make the smallest useful fix.
+5. Run tests and lint. Commit only if everything passes.
 ```
 
 ## 6. Markdown body semantics
@@ -132,8 +131,7 @@ Runtimes MUST:
 
 - normalize relative paths safely
 - reject path traversal that escapes the package root
-- treat missing referenced files as package errors or warnings (see
-  [`runtime-contract.md`](runtime-contract.md))
+- treat missing referenced files as package errors or warnings
 
 ## 9. Validation rules
 
