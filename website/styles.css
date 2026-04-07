@@ -68,7 +68,7 @@ p { margin: 0 0 16px; }
 .site-header {
   position: sticky;
   top: 0;
-  background: rgba(11, 16, 32, 0.88);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   z-index: 50;
