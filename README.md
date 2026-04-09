@@ -1,8 +1,5 @@
 # Ralph Loops
 
-AI coding agents are powerful, but their workflows are trapped — pasted into
-chat windows, hardcoded into one tool, lost when the session ends.
-
 Ralph Loops is a minimal, open format for packaging autonomous agent loops as
 portable directories. A `RALPH.md` file describes what the agent should do,
 which commands to run for feedback, and what arguments to accept. Any compatible
