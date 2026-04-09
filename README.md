@@ -3,9 +3,7 @@
 Ralph Loops is a minimal, open format for packaging autonomous agent loops as
 portable directories. A `RALPH.md` file describes what the agent should do,
 which commands to run for feedback, and what arguments to accept. Any compatible
-runtime can execute it. The format works well for ongoing gardening tasks —
-hunting bugs, keeping docs in sync, bumping dependencies — the kind of work
-that never really ends. Run them interactively, or put them on a cron.
+runtime can execute it. 
 
 > **Status:** v0.1 draft. The format is a proposal — it earns adoption through
 > usefulness, not authority.
