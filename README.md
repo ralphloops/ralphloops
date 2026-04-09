@@ -60,51 +60,6 @@ The body is the agent's instructions. The runtime expands the templates, runs
 the commands, and pipes everything to the agent. Write the loop once; run it
 with any compatible runtime.
 
-## What makes this different from a directory of prompts
-
-Three things the format adds beyond "markdown file in a folder":
-
-1. **Feedback commands.** The runtime executes `commands` between iterations and
-   injects their output into the prompt. The agent sees fresh test results,
-   coverage reports, or lint output every loop.
-2. **Arguments.** Loops are parameterized with `args` so the same loop works
-   across different modules, scopes, or inputs.
-3. **Portability contract.** The format defines how runtimes discover, parse,
-   and execute loops — so a loop written for one tool works with another.
-
-## Real-world usage
-
-Ralph Loops are used in production on
-[agr](https://github.com/computerlovetech/agr) (a package manager for AI
-agents) and [ralphify](https://github.com/computerlovetech/ralphify) (the
-reference runtime). Loops like `bug-hunter`, `refactor-module`, and `write-docs`
-have driven real changes:
-
-- **Bug fixes** — token leak vulnerability found and patched with a regression
-  test
-- **Refactoring** — function complexity reduced from 25 to 13, 19 to 9, 16 to 7
-  across multiple modules
-- **Dead code removal** — 10+ unused functions identified and removed
-- **Documentation** — README rewritten end-to-end from loop output
-
-Every commit from a loop run carries
-`Co-authored-by: Ralphify <noreply@ralphify.co>`.
-
-## Examples
-
-Six complete loop packages ship with the spec under [`examples/`](examples/).
-Most are ongoing gardening tasks — the kind of thing you schedule on a cron
-or kick off whenever a codebase needs attention:
-
-| Loop | Agent | What it does |
-|------|-------|-------------|
-| [`bug-hunter`](examples/bug-hunter/) | `claude` | Continuously hunt for bugs and edge cases |
-| [`improve-codebase`](examples/improve-codebase/) | `codex` | Continuously find and fix code quality issues |
-| [`raise-coverage`](examples/raise-coverage/) | `codex` | Steadily lift test coverage over time |
-| [`refactor-module`](examples/refactor-module/) | `claude` | Clean up internals without changing behavior |
-| [`write-docs`](examples/write-docs/) | `codex` | Keep docs in sync with code as it changes |
-| [`dependency-updater`](examples/dependency-updater/) | `claude` | Keep dependencies current and secure |
-
 ## Inspiration
 
 Ralph Loops draws from two sources:
